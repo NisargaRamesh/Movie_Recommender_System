@@ -2,11 +2,32 @@ import streamlit as st
 import pickle
 import pandas as pd
 import requests
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
 
 def fetch_poster(movie_id):
-    response = requests.get('https://api.themoviedb.org/3/movie/{}?api_key=f0d42189e11ed77361ac612c52c0d671&language=en-US'.format(movie_id))
-    data = response.json()
-    return "https://image.tmdb.org/t/p/w500/" + data['poster_path']
+    api_key = os.getenv("TMDB_API_KEY")
+    url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={api_key}&language=en-US"
+    headers = {
+        "User-Agent": "Mozilla/5.0"
+    }
+    try:
+        response = requests.get(url, headers=headers, timeout=5)
+        response.raise_for_status()
+        data = response.json()
+        poster_path = data.get('poster_path')
+        if poster_path:
+            return "https://image.tmdb.org/t/p/w500/" + poster_path
+        else:
+            return "https://via.placeholder.com/500x750?text=No+Image"
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching poster: {e}")
+        return "https://via.placeholder.com/500x750?text=No+Image"
+
+
 def recommend(movie):
     movie_index = movies[movies['title'] == movie].index[0]
     distances = similarity[movie_index]
