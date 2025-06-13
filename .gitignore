@@ -1,0 +1,29 @@
+# Ignore Python envs and system files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+*.env
+
+.env
+# VSCode or PyCharm
+.idea/
+.vscode/
+
+# Ignore large files
+similarity.pkl
+
+
+# Ignore Python cache and virtual environments
+__pycache__/
+*.pyc
+venv/
+.idea/
+
+# Ignore sensitive and large files
+.env
+*.env
+similarity.pkl
